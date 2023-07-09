@@ -1,2 +1,7 @@
+# CLion
 .idea/*
 cmake-build-debug/*
+
+# Visual Studio 
+out/*
+.vs/*
