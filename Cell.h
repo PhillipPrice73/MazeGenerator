@@ -7,7 +7,9 @@
 #define CELL_H
 
 #include <cstdlib>
-#include <vector>
+#include <cstdint>
+#include <unordered_map>
+#include <string>
 
 class Cell {
 public:
@@ -16,16 +18,17 @@ public:
         m_column = column;
     };
     virtual ~Cell() = default;
+
+    Cell getNeighbor(const std::string& neighborLocation);
+    void addNeighbor(const std::string& neighborName, const Cell& neighbor);
+    
 protected:
 
 private:
-    std::size_t m_row{0};
-    std::size_t m_column{0};
-    std::size_t m_northNeighbor[2];
-    std::size_t m_southNeighbor[2];
-    std::size_t m_eastNeighbor[2];
-    std::size_t m_westNeighbor[2];
-    std::vector<std::vector<std::size_t>> links;
+    std::uint64_t m_row{0};
+    std::uint64_t m_column{0};
+
+    std::unordered_map<std::string, Cell>* m_neighbors;
 };
 
 
