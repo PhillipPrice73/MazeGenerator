@@ -20,7 +20,7 @@ public:
     };
     virtual ~Cell() = default;
 
-    Cell getNeighbor(const std::string& neighborLocation);
+    Cell* getNeighbor(const std::string& neighborLocation); 
     void addNeighbor(const std::string& neighborName, const Cell& neighbor);
     bool isLinkedNeighbor(const Cell& potentialNeighbor);
     void addLinkedNeighbor(Cell& neighbor, bool bidirectional = true);

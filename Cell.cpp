@@ -5,9 +5,9 @@
 #include "Cell.h"
 #include <algorithm>
 
-Cell Cell::getNeighbor(const std::string &neighborLocation) {
-    auto it = Cell::m_neighbors->find(neighborLocation);
-    return it->second;
+Cell* Cell::getNeighbor(const std::string &neighborLocation) {
+    auto it = m_neighbors->find(neighborLocation);
+    return (it == m_neighbors->end() ? nullptr :  &(it->second));
 }
 
 void Cell::addNeighbor(const std::string& neighborName, const Cell& neighbor) {
