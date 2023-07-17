@@ -5,33 +5,46 @@
 #include "Cell.h"
 #include <algorithm>
 
-Cell* Cell::getNeighbor(const std::string &neighborLocation) {
+std::optional<Cell> Cell::getNeighbor(const std::string &neighborLocation) 
+{
     auto it = m_neighbors->find(neighborLocation);
-    return (it == m_neighbors->end() ? nullptr :  &(it->second));
+    return (it == m_neighbors->end() ? std::nullopt : std::optional<Cell>(it->second));
 }
 
-void Cell::addNeighbor(const std::string& neighborName, const Cell& neighbor) {
+void Cell::addNeighbor(const std::string& neighborName, const Cell& neighbor) 
+{
     Cell::m_neighbors->insert({neighborName, neighbor});
 }
 
 bool Cell::isLinkedNeighbor(const Cell& potentialNeighbor)
 {
-    auto it = Cell::m_linkedNeighbors->find(potentialNeighbor);
-    return (it != m_linkedNeighbors->end());
+    auto it = std::find(m_linkedNeighbors.begin(), m_linkedNeighbors.end(), potentialNeighbor);
+    return (it != m_linkedNeighbors.end());
+    // Should be a way to do this using the any_of function
+    //return std::any_of(m_linkedNeighbors.begin(), m_linkedNeighbors.end(), [](){})
 }
 
 void Cell::addLinkedNeighbor(Cell& neighbor, bool bidirectional)
-{
-    m_linkedNeighbors->insert(neighbor);
-    if (bidirectional) {
-        neighbor.addLinkedNeighbor(*this, false);
+{  
+    if (!isLinkedNeighbor(neighbor)) 
+    {
+        m_linkedNeighbors.push_back(neighbor);
+        if (bidirectional)
+        {
+            neighbor.addLinkedNeighbor(*this, false);
+        }
     }
 }
 
 void Cell::removeLinkedNeighbor(Cell& neighbor, bool bidirectional)
 {
-    m_linkedNeighbors->erase(neighbor);
-    if (bidirectional) {
-        neighbor.removeLinkedNeighbor(*this, false);
+    auto it = std::find(m_linkedNeighbors.begin(), m_linkedNeighbors.end(), neighbor);
+    if (it != m_linkedNeighbors.end())
+    {
+        m_linkedNeighbors.erase(it);
+        if (bidirectional) 
+        {
+            neighbor.removeLinkedNeighbor(*this, false);
+        }
     }
 }
